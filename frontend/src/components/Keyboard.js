@@ -6,7 +6,6 @@ const keyboardLayout = [
 ];
 
 const Keyboard = () => {
-    // return <Wrapper>Keyboard</Wrapper>;
     return (
         <Wrapper>
             {keyboardLayout.map((row, i) => {
@@ -22,10 +21,7 @@ const Keyboard = () => {
     );
 };
 
-const Wrapper = styled.div`
-    border: 2px solid black;
-    width: 100%;
-`;
+const Wrapper = styled.div``;
 
 const Row = styled.div`
     margin-top: 0.4rem;
@@ -40,9 +36,9 @@ const Row = styled.div`
 
 const Key = styled.button`
     margin-right: 0.2rem;
-    font-size: x-large;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
+    font-size: large;
+    width: 2rem;
+    height: 3rem;
 `;
 
 export default Keyboard;
