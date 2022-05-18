@@ -1,13 +1,15 @@
+import { useContext } from "react";
 import styled from "styled-components";
+import { WordContext } from "../WordContext";
 
-const GuessRow = () => {
-    const wordLength = 5;
+const GuessRow = ({ rowNum }) => {
+    const { wordLength } = useContext(WordContext);
     const letters = Array(wordLength).fill(null);
 
     return (
         <Wrapper>
             {letters.map((_, i) => {
-                return <Letter key={i}>?</Letter>;
+                return <Letter id={`${rowNum}-${i}`} key={i} />;
             })}
         </Wrapper>
     );
@@ -21,7 +23,14 @@ const Wrapper = styled.div`
 const Letter = styled.div`
     border: 1px solid black;
     margin: 0.4rem;
-    padding: 1.5rem;
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
 `;
 
 export default GuessRow;
