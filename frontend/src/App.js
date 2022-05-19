@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import Profile from "./components/Profile";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import { WordContext } from "./WordContext";
+import InvalidWordError from "./components/InvalidWordError";
 /*
 front-end:
 login with auth0
@@ -16,11 +18,13 @@ list of words
 */
 const App = () => {
     const { showingProfile } = useContext(UserContext);
+    const { invalidGuessWarning } = useContext(WordContext);
 
     return (
         <Wrapper>
             <Header />
             {showingProfile && <Profile />}
+            {invalidGuessWarning && <InvalidWordError />}
             <MainBoard />
             <Keyboard />
         </Wrapper>

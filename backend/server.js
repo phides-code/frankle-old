@@ -3,6 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 
 const { userLogin } = require("./userLogin");
+const { getRandomWord } = require("./getRandomWord");
+const { checkValidity } = require("./checkValidity");
 
 express()
     .use(morgan("tiny"))
@@ -13,6 +15,8 @@ express()
 
     // endpoints here
     .post("/api/userlogin", userLogin)
+    .get("/api/randomword", getRandomWord)
+    .post("/api/checkvalidity", checkValidity)
 
     // catch all endpoint.
     .get("*", (req, res) => {

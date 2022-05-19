@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import styled from "styled-components";
 import { WordContext } from "../WordContext";
+
 const keyboardLayout = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
     ["A", "S", "D", "F", "G", "H", "J", "K", "L", "<"],
@@ -10,13 +11,13 @@ const keyboardLayout = [
 const Keyboard = () => {
     const {
         currentRowNumber,
-        setCurrentRowNumber,
         currentLetterPosition,
         setCurrentLetterPosition,
         wordLength,
+        numOfGuessRows,
+        processGuess,
+        setCanSubmit,
     } = useContext(WordContext);
-
-    const [canSubmit, setCanSubmit] = useState(false);
 
     const doBackspace = () => {
         if (currentLetterPosition > 0) {
@@ -29,7 +30,10 @@ const Keyboard = () => {
     };
 
     const typeLetter = (letter) => {
-        if (currentLetterPosition < wordLength) {
+        if (
+            currentLetterPosition < wordLength &&
+            currentRowNumber < numOfGuessRows
+        ) {
             document.getElementById(
                 `${currentRowNumber}-${currentLetterPosition}`
             ).innerText = letter;
@@ -40,23 +44,9 @@ const Keyboard = () => {
         }
     };
 
-    const checkWord = () => {
-        if (canSubmit) {
-            let guess = "";
-            for (let i = 0; i < wordLength; i++) {
-                guess += document.getElementById(
-                    `${currentRowNumber}-${i}`
-                ).innerText;
-            }
-            console.log("checking word: " + guess);
-            setCurrentRowNumber((row) => row + 1);
-            setCurrentLetterPosition(0);
-        }
-    };
-
     const handleKey = (e) => {
         if (e.target.value === "✔️") {
-            checkWord();
+            processGuess();
         } else if (e.target.value === "<") {
             doBackspace();
         } else {
@@ -89,7 +79,9 @@ const Keyboard = () => {
     );
 };
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+    margin-top: 1.6rem;
+`;
 
 const Row = styled.div`
     margin-top: 0.4rem;

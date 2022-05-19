@@ -7,8 +7,7 @@ const options = {
 };
 
 const userLogin = async (req, res) => {
-    console.log(`Got req.body: `);
-    console.log(req.body);
+    console.log("Logging in user: " + req.body.nickname);
 
     const client = new MongoClient(MONGO_URI, options);
     const dbName = "frankle";
