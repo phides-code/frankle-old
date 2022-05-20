@@ -40,7 +40,7 @@ const userLogin = async (req, res) => {
                 .json({ status: 200, message: "Adding new user to DB..." });
         }
     } catch (err) {
-        console.log("Caught error: ");
+        console.log("userLogin caught error: ");
         console.log(err.message);
         return res.status(500).json({ status: 500, message: err.message });
     } finally {

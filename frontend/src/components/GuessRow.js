@@ -21,6 +21,7 @@ const Wrapper = styled.div`
 `;
 
 const Letter = styled.div`
+    font-size: x-large;
     border: 1px solid black;
     margin: 0.4rem;
     height: 3rem;
@@ -31,6 +32,18 @@ const Letter = styled.div`
     justify-content: center;
     align-items: center;
     align-content: stretch;
+    &.rightPosition {
+        background-color: green;
+        color: white;
+    }
+    &.wrongPosition {
+        background-color: yellow;
+        color: black;
+    }
+    &.badLetter {
+        background-color: grey;
+        color: white;
+    }
 `;
 
 export default GuessRow;

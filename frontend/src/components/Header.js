@@ -9,17 +9,17 @@ const Header = () => {
 
     return (
         <Wrapper>
-            <div>Frankle</div>
+            <Frankle>Frankle</Frankle>
             <div>
                 {isAuthenticated ? (
                     <div>
-                        <button
+                        <ProfileButton
                             onClick={() => {
                                 setShowingProfile(true);
                             }}
                         >
                             Profile
-                        </button>
+                        </ProfileButton>
                         <LogoutButton>Logout</LogoutButton>
                     </div>
                 ) : (
@@ -38,6 +38,14 @@ const Wrapper = styled.div`
     justify-content: space-between;
     align-items: center;
     align-content: stretch;
+    font-size: x-large;
+    margin-bottom: 0.2rem;
+`;
+
+const Frankle = styled.div``;
+
+const ProfileButton = styled.button`
+    margin-right: 0.8rem;
 `;
 
 export default Header;

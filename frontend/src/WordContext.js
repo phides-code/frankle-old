@@ -25,7 +25,26 @@ export const WordProvider = ({ children }) => {
         }
     }, [currentWord]);
 
-    const colorize = (guess) => {};
+    const colorize = (guess) => {
+        let goodLetters = 0;
+        for (let i = 0; i < wordLength; i++) {
+            const letterBox = document.getElementById(
+                `${currentRowNumber}-${i}`
+            );
+
+            if (guess[i] === currentWord[i]) {
+                letterBox.classList.add("rightPosition");
+                goodLetters++;
+            } else if (currentWord.includes(guess[i])) {
+                letterBox.classList.add("wrongPosition");
+            } else {
+                letterBox.classList.add("badLetter");
+            }
+        }
+        if (goodLetters === wordLength) {
+            console.log("win!");
+        }
+    };
 
     const checkValidity = async (guess) => {
         const res = await fetch("/api/checkvalidity", {

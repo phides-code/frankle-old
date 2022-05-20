@@ -26,7 +26,7 @@ const getRandomWord = async (req, res) => {
 
         return res.status(200).json({ status: 200, randomWord: randomWord });
     } catch (err) {
-        console.log("Caught error: ");
+        console.log("getRandomWord caught error: ");
         console.log(err.message);
 
         return res.status(500).json({ status: 500, message: err.message });

@@ -31,7 +31,7 @@ const checkValidity = async (req, res) => {
             return res.status(200).json({ status: 200, message: "INVALID" });
         }
     } catch (err) {
-        console.log("Caught error: ");
+        console.log("checkValidity caught error: ");
         console.log(err.message);
 
         return res.status(500).json({ status: 500, message: err.message });

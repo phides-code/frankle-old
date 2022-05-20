@@ -79,9 +79,7 @@ const Keyboard = () => {
     );
 };
 
-const Wrapper = styled.div`
-    margin-top: 1.6rem;
-`;
+const Wrapper = styled.div``;
 
 const Row = styled.div`
     margin-top: 0.4rem;

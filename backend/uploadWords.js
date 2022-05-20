@@ -44,7 +44,7 @@ const uploadWords = async () => {
         console.log("got insertResult: ");
         console.log(insertResult);
     } catch (err) {
-        console.log("Caught error: ");
+        console.log("uploadWords caught error: ");
         console.log(err.message);
     } finally {
         client.close();

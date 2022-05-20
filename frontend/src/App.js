@@ -6,30 +6,43 @@ import Profile from "./components/Profile";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { WordContext } from "./WordContext";
-import InvalidWordError from "./components/InvalidWordError";
-/*
-front-end:
-login with auth0
-on-screen list of keys - disabled style, green style, yellow style
+import { GameContext } from "./GameContext";
+import Gameover from "./components/Gameover";
 
-back-end:
-back-end: user stats in db
-list of words
-*/
 const App = () => {
     const { showingProfile } = useContext(UserContext);
     const { invalidGuessWarning } = useContext(WordContext);
+    const { gameOver } = useContext(GameContext);
 
     return (
         <Wrapper>
             <Header />
             {showingProfile && <Profile />}
-            {invalidGuessWarning && <InvalidWordError />}
             <MainBoard />
+            <GameMessage>
+                {!gameOver ? (
+                    <>{!invalidGuessWarning && <>{`:-)`}</>}</>
+                ) : (
+                    <Gameover />
+                )}
+                {invalidGuessWarning && <>{`Invalid word :-/`}</>}
+            </GameMessage>
             <Keyboard />
         </Wrapper>
     );
 };
+
+const GameMessage = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: stretch;
+    width: 100%;
+    min-height: 3rem;
+    font-size: xx-large;
+`;
 
 const Wrapper = styled.div`
     display: flex;
