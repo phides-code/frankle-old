@@ -20,10 +20,10 @@ const App = () => {
             {showingProfile && <Profile />}
             <MainBoard />
             <GameMessage>
-                {!gameOver ? (
-                    <>{!invalidGuessWarning && <>{`:-)`}</>}</>
-                ) : (
+                {gameOver ? (
                     <Gameover />
+                ) : (
+                    <>{!invalidGuessWarning && <>{`:-)`}</>}</>
                 )}
                 {invalidGuessWarning && <>{`Invalid word :-/`}</>}
             </GameMessage>

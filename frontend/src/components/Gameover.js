@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { GameContext } from "../GameContext";
 
 const Gameover = () => {
-    const { gameWon, gameLost } = useContext(GameContext);
+    const { gameWon } = useContext(GameContext);
 
     return (
         <Wrapper>
