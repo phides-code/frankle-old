@@ -1,29 +1,23 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
+import { GameContext } from "./GameContext";
 
-export const WordContext = createContext();
+export const BoardContext = createContext();
 
-export const WordProvider = ({ children }) => {
-    const [currentWord, setCurrentWord] = useState(null);
-    const [currentRowNumber, setCurrentRowNumber] = useState(0);
+export const BoardProvider = ({ children }) => {
     const [currentLetterPosition, setCurrentLetterPosition] = useState(0);
     const [invalidGuessWarning, setInvalidGuessWarning] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
 
-    const wordLength = 5;
-    const numOfGuessRows = 6;
-
-    useEffect(() => {
-        const getRandomWord = async () => {
-            const res = await fetch("/api/randomword");
-            const randomWordResponse = await res.json();
-            console.log("got randomWord: ");
-            console.log(randomWordResponse.randomWord.word);
-            setCurrentWord(randomWordResponse.randomWord.word);
-        };
-        if (!currentWord) {
-            getRandomWord();
-        }
-    }, [currentWord]);
+    const {
+        currentWord,
+        wordLength,
+        currentRowNumber,
+        setCurrentRowNumber,
+        saveGame,
+        setGameWon,
+        setGameOver,
+        setGuesses,
+    } = useContext(GameContext);
 
     const colorize = (guess) => {
         let goodLetters = 0;
@@ -43,6 +37,8 @@ export const WordProvider = ({ children }) => {
         }
         if (goodLetters === wordLength) {
             console.log("win!");
+            setGameWon(true);
+            setGameOver(true);
         }
     };
 
@@ -55,18 +51,13 @@ export const WordProvider = ({ children }) => {
         const validityResponse = await res.json();
 
         if (validityResponse.message === "VALID") {
-            colorize(guess);
-            setCurrentRowNumber((row) => row + 1);
-            setCurrentLetterPosition(0);
+            return true;
         } else if (validityResponse.message === "INVALID") {
-            setInvalidGuessWarning(true);
-            setTimeout(() => {
-                setInvalidGuessWarning(false);
-            }, 3000);
+            return false;
         }
     };
 
-    const processGuess = () => {
+    const processGuess = async () => {
         if (canSubmit) {
             let guess = "";
             for (let i = 0; i < wordLength; i++) {
@@ -74,29 +65,34 @@ export const WordProvider = ({ children }) => {
                     `${currentRowNumber}-${i}`
                 ).innerText;
             }
-            checkValidity(guess);
+            if ((await checkValidity(guess)) === true) {
+                colorize(guess);
+                setGuesses((currentGuesses) => [...currentGuesses, guess]);
+                saveGame(guess);
+                setCurrentRowNumber((row) => row + 1);
+                setCurrentLetterPosition(0);
+            } else {
+                setInvalidGuessWarning(true);
+                setTimeout(() => {
+                    setInvalidGuessWarning(false);
+                }, 3000);
+            }
         }
     };
 
     return (
-        <WordContext.Provider
+        <BoardContext.Provider
             value={{
-                currentWord,
-                setCurrentWord,
-                currentRowNumber,
-                setCurrentRowNumber,
                 currentLetterPosition,
                 setCurrentLetterPosition,
                 invalidGuessWarning,
                 setInvalidGuessWarning,
-                wordLength,
-                numOfGuessRows,
                 processGuess,
                 canSubmit,
                 setCanSubmit,
             }}
         >
             {children}
-        </WordContext.Provider>
+        </BoardContext.Provider>
     );
 };

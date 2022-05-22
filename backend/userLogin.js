@@ -35,6 +35,9 @@ const userLogin = async (req, res) => {
                     _id: req.body.email,
                     ...req.body,
                 });
+
+            console.log("got resultOfInsert: ");
+            console.log(resultOfInsert);
             return res
                 .status(200)
                 .json({ status: 200, message: "Adding new user to DB..." });

@@ -5,13 +5,13 @@ import Header from "./components/Header";
 import Profile from "./components/Profile";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
-import { WordContext } from "./WordContext";
+import { BoardContext } from "./BoardContext";
 import { GameContext } from "./GameContext";
 import Gameover from "./components/Gameover";
 
 const App = () => {
     const { showingProfile } = useContext(UserContext);
-    const { invalidGuessWarning } = useContext(WordContext);
+    const { invalidGuessWarning } = useContext(BoardContext);
     const { gameOver } = useContext(GameContext);
 
     return (

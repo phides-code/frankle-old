@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { WordContext } from "../WordContext";
+import { BoardContext } from "../BoardContext";
+import { GameContext } from "../GameContext";
 
 const keyboardLayout = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -9,15 +10,14 @@ const keyboardLayout = [
 ];
 
 const Keyboard = () => {
+    const { currentRowNumber, wordLength, numOfGuessRows } =
+        useContext(GameContext);
     const {
-        currentRowNumber,
         currentLetterPosition,
         setCurrentLetterPosition,
-        wordLength,
-        numOfGuessRows,
         processGuess,
         setCanSubmit,
-    } = useContext(WordContext);
+    } = useContext(BoardContext);
 
     const doBackspace = () => {
         if (currentLetterPosition > 0) {

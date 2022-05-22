@@ -13,8 +13,8 @@ export const UserProvider = ({ children }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ ...user }),
         });
-        const fetchResponse = await res.json();
-        console.log(`got fetchResponse.message: ${fetchResponse.message}`);
+        const loginResponse = await res.json();
+        console.log(`got loginResponse.message: ${loginResponse.message}`);
     };
 
     useEffect(() => {

@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { WordContext } from "../WordContext";
+import { GameContext } from "../GameContext";
 
 const GuessRow = ({ rowNum }) => {
-    const { wordLength } = useContext(WordContext);
+    const { wordLength } = useContext(GameContext);
     const letters = Array(wordLength).fill(null);
 
     return (

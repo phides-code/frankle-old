@@ -4,7 +4,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { UserProvider } from "./UserContext";
-import { WordProvider } from "./WordContext";
+import { BoardProvider } from "./BoardContext";
 import { GameProvider } from "./GameContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -17,9 +17,9 @@ root.render(
         >
             <UserProvider>
                 <GameProvider>
-                    <WordProvider>
+                    <BoardProvider>
                         <App />
-                    </WordProvider>
+                    </BoardProvider>
                 </GameProvider>
             </UserProvider>
         </Auth0Provider>
