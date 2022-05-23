@@ -10,7 +10,7 @@ const keyboardLayout = [
 ];
 
 const Keyboard = () => {
-    const { currentRowNumber, wordLength, numOfGuessRows } =
+    const { currentRowNumber, wordLength, numOfGuessRows, gameOver } =
         useContext(GameContext);
     const {
         currentLetterPosition,
@@ -65,7 +65,9 @@ const Keyboard = () => {
                                     value={key}
                                     key={i}
                                     onClick={(e) => {
-                                        handleKey(e);
+                                        if (!gameOver) {
+                                            handleKey(e);
+                                        }
                                     }}
                                 >
                                     {key}

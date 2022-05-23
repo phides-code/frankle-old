@@ -6,6 +6,7 @@ const { userLogin } = require("./userLogin");
 const { getRandomWord } = require("./getRandomWord");
 const { checkValidity } = require("./checkValidity");
 const { saveGame } = require("./saveGame");
+const { loadGame } = require("./loadGame");
 
 express()
     .use(morgan("tiny"))
@@ -19,6 +20,7 @@ express()
     .get("/api/randomword", getRandomWord)
     .post("/api/checkvalidity", checkValidity)
     .post("/api/savegame", saveGame)
+    .post("/api/loadgame", loadGame)
 
     // catch all endpoint.
     .get("*", (req, res) => {

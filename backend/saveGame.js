@@ -20,15 +20,47 @@ const saveGame = async (req, res) => {
         const db = client.db(dbName);
         console.log("Connected to DB:" + dbName);
 
-        const resultOfInsert = await db.collection(collectionName).insertOne({
-            _id: uuidv4().substring(28, 37),
-            ...req.body,
+        // if this userId / word pair already exists, update it
+        // else, create it
+
+        const existingSavedGame = await db.collection(collectionName).findOne({
+            userId: req.body.userId,
+            word: req.body.word,
         });
 
-        console.log("got resultOfInsert: ");
-        console.log(resultOfInsert);
+        if (existingSavedGame) {
+            const resultOfUpdate = await db
+                .collection(collectionName)
+                .updateOne(
+                    { _id: existingSavedGame._id },
+                    {
+                        $set: {
+                            guesses: req.body.guesses,
+                            onRow: req.body.onRow,
+                            gameOver: req.body.gameOver,
+                            gameWon: req.body.gameWon,
+                        },
+                    }
+                );
+            console.log("got resultOfUpdate: ");
+            console.log(resultOfUpdate);
+            return res
+                .status(200)
+                .json({ status: 200, message: "updated existing saved game" });
+        } else {
+            const resultOfInsert = await db
+                .collection(collectionName)
+                .insertOne({
+                    _id: uuidv4().substring(28, 37),
+                    ...req.body,
+                });
 
-        return res.status(200).json({ status: 200, message: "game saved" });
+            console.log("got resultOfInsert: ");
+            console.log(resultOfInsert);
+            return res
+                .status(200)
+                .json({ status: 200, message: "new game saved" });
+        }
     } catch (err) {
         console.log("saveGame caught error: ");
         console.log(err.message);
