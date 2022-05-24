@@ -15,20 +15,20 @@ const Header = () => {
             <div>
                 {isAuthenticated ? (
                     <div>
-                        <button
+                        <HeaderButton
                             onClick={() => {
                                 resetGame();
                             }}
                         >
                             Reset
-                        </button>
-                        <ProfileButton
+                        </HeaderButton>
+                        <HeaderButton
                             onClick={() => {
                                 setShowingProfile(true);
                             }}
                         >
                             Profile
-                        </ProfileButton>
+                        </HeaderButton>
                         <LogoutButton>Logout</LogoutButton>
                     </div>
                 ) : (
@@ -53,8 +53,12 @@ const Wrapper = styled.div`
 
 const Frankle = styled.div``;
 
-const ProfileButton = styled.button`
+const HeaderButton = styled.button`
     margin-right: 0.8rem;
 `;
+
+// const ProfileButton = styled.button`
+//     margin-right: 0.8rem;
+// `;
 
 export default Header;

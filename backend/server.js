@@ -7,6 +7,11 @@ const { getRandomWord } = require("./getRandomWord");
 const { checkValidity } = require("./checkValidity");
 const { saveGame } = require("./saveGame");
 const { loadGame } = require("./loadGame");
+const { getWordList } = require("./getWordList");
+const { getSavedGames } = require("./getSavedGames");
+const { getUsers } = require("./getUsers");
+const { deleteGame } = require("./deleteGame");
+const { getUserStats } = require("./getUserStats");
 
 express()
     .use(morgan("tiny"))
@@ -16,11 +21,16 @@ express()
     .use(express.static("public"))
 
     // endpoints here
-    .post("/api/userlogin", userLogin)
+    .get("/api/wordlist", getWordList)
+    .get("/api/savedgames", getSavedGames)
+    .get("/api/users", getUsers)
     .get("/api/randomword", getRandomWord)
+    .post("/api/userstats", getUserStats)
+    .post("/api/userlogin", userLogin)
     .post("/api/checkvalidity", checkValidity)
     .post("/api/savegame", saveGame)
     .post("/api/loadgame", loadGame)
+    .delete("/api/deletegame", deleteGame)
 
     // catch all endpoint.
     .get("*", (req, res) => {

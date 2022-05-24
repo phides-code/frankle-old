@@ -23,7 +23,7 @@ export const GameProvider = ({ children }) => {
                 setGameOver(true);
                 gameStatus.gameWon = true;
                 gameStatus.gameOver = true;
-            } else if (currentRowNumber === numOfGuessRows) {
+            } else if (currentRowNumber === numOfGuessRows - 1) {
                 setGameOver(true);
                 gameStatus.gameOver = true;
             }
@@ -54,17 +54,40 @@ export const GameProvider = ({ children }) => {
         setCurrentWord(randomWordResponse.randomWord.word);
     };
 
+    const deleteGame = async () => {
+        const res = await fetch("/api/deletegame", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: user.email,
+                word: currentWord,
+            }),
+        });
+
+        const deleteGameResponse = await res.json();
+        console.log(
+            `got deleteGameResponse.message: ${deleteGameResponse.message}`
+        );
+    };
+
     const resetGame = () => {
-        // needs work
+        console.log("resetting game...");
         for (let i = 0; i < currentRowNumber; i++) {
-            for (let j = 0; i < wordLength; i++) {
-                console.log(`clearing letterBox ${i}-${j}`);
+            for (let j = 0; j < wordLength; j++) {
                 const letterBox = document.getElementById(`${i}-${j}`);
-                letterBox.classList.remove("rightPosition");
-                letterBox.classList.remove("wrongPosition");
-                letterBox.classList.remove("badLetter");
+                letterBox.classList.remove(
+                    "rightPosition",
+                    "wrongPosition",
+                    "badLetter"
+                );
+                letterBox.innerText = "";
             }
         }
+
+        if (!gameOver) {
+            deleteGame();
+        }
+
         setGameOver(false);
         setGameWon(false);
         getRandomWord();
@@ -109,7 +132,7 @@ export const GameProvider = ({ children }) => {
             setCurrentRowNumber(gameInProgress.onRow);
         };
 
-        const gameFlow = async () => {
+        const startGame = async () => {
             if (isAuthenticated) {
                 const gameInProgress = await checkForGameInProgress();
                 if (gameInProgress === "none") {
@@ -126,7 +149,7 @@ export const GameProvider = ({ children }) => {
             }
         };
 
-        gameFlow();
+        startGame();
     }, [isLoading, isAuthenticated, user?.email, toggleReset]);
 
     return (

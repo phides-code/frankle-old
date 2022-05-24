@@ -3,14 +3,14 @@ import { useContext } from "react";
 import { GameContext } from "../GameContext";
 
 const Gameover = () => {
-    const { gameWon, resetGame } = useContext(GameContext);
+    const { gameWon, resetGame, currentWord } = useContext(GameContext);
 
     return (
         <Wrapper>
             {gameWon ? (
                 <WinMessage>{`Congratulations :-)`}</WinMessage>
             ) : (
-                <LossMessage>{`Too bad :-(`}</LossMessage>
+                <LossMessage>{`It was ${currentWord} :-(`}</LossMessage>
             )}
             <PlayAgainButton
                 onClick={() => {

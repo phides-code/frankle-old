@@ -14,8 +14,6 @@ export const BoardProvider = ({ children }) => {
         currentRowNumber,
         setCurrentRowNumber,
         saveGame,
-        setGameWon,
-        setGameOver,
         setGuesses,
     } = useContext(GameContext);
 
@@ -35,11 +33,6 @@ export const BoardProvider = ({ children }) => {
                 letterBox.classList.add("badLetter");
             }
         }
-        // if (goodLetters === wordLength) {
-        //     console.log("win!");
-        //     setGameWon(true);
-        //     setGameOver(true);
-        // }
     };
 
     const checkValidity = async (guess) => {
