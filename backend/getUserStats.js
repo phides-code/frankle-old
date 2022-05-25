@@ -16,7 +16,7 @@ const getUserStats = async (req, res) => {
         const db = client.db(dbName);
         console.log("Connected to DB: " + dbName);
 
-        const userResults = await db
+        const gamesPlayed = await db
             .collection(collectionName)
             .find({
                 userId: req.body.userId,
@@ -26,14 +26,24 @@ const getUserStats = async (req, res) => {
 
         console.log(`compiling stats for ${req.body.userId}...`);
 
-        const wins = userResults.filter((result) => {
+        const wins = gamesPlayed.filter((result) => {
             return result.gameWon === true;
-        }).length;
-        const losses = userResults.length - wins;
+        });
+        const losses = gamesPlayed.length - wins.length;
+
+        let scoreTotal = 0;
+
+        wins.forEach((win) => {
+            scoreTotal += win.onRow;
+        });
+
+        const average = scoreTotal / wins.length;
 
         const userStats = {
-            wins,
+            gamesPlayed: gamesPlayed.length,
+            wins: wins.length,
             losses,
+            average,
         };
 
         return res.status(200).json({ status: 200, userStats: userStats });

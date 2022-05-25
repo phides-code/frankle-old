@@ -18,7 +18,6 @@ export const BoardProvider = ({ children }) => {
     } = useContext(GameContext);
 
     const colorize = (guess) => {
-        let goodLetters = 0;
         for (let i = 0; i < wordLength; i++) {
             const letterBox = document.getElementById(
                 `${currentRowNumber}-${i}`
@@ -26,7 +25,6 @@ export const BoardProvider = ({ children }) => {
 
             if (guess[i] === currentWord[i]) {
                 letterBox.classList.add("rightPosition");
-                goodLetters++;
             } else if (currentWord.includes(guess[i])) {
                 letterBox.classList.add("wrongPosition");
             } else {

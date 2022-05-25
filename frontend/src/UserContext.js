@@ -7,22 +7,22 @@ export const UserProvider = ({ children }) => {
     const { user, isAuthenticated, isLoading } = useAuth0();
     const [showingProfile, setShowingProfile] = useState(false);
 
-    const sendUserToDb = async () => {
-        const res = await fetch(`/api/userlogin`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...user }),
-        });
-        const loginResponse = await res.json();
-        console.log(`got loginResponse.message: ${loginResponse.message}`);
-    };
-
     useEffect(() => {
+        const sendUserToDb = async () => {
+            const res = await fetch("/api/userlogin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...user }),
+            });
+            const loginResponse = await res.json();
+            console.log(`got loginResponse.message: ${loginResponse.message}`);
+        };
+
         if (isAuthenticated) {
             console.log("Got authenticated user.");
             sendUserToDb();
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, user]);
 
     return (
         <UserContext.Provider

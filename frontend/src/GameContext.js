@@ -15,19 +15,18 @@ export const GameProvider = ({ children }) => {
     const numOfGuessRows = 6;
 
     const saveGame = async (lastGuess) => {
+        let gameStatus = { gameWon, gameOver };
+
+        if (lastGuess === currentWord) {
+            setGameWon(true);
+            setGameOver(true);
+            gameStatus.gameWon = true;
+            gameStatus.gameOver = true;
+        } else if (currentRowNumber === numOfGuessRows - 1) {
+            setGameOver(true);
+            gameStatus.gameOver = true;
+        }
         if (isAuthenticated) {
-            let gameStatus = { gameWon, gameOver };
-
-            if (lastGuess === currentWord) {
-                setGameWon(true);
-                setGameOver(true);
-                gameStatus.gameWon = true;
-                gameStatus.gameOver = true;
-            } else if (currentRowNumber === numOfGuessRows - 1) {
-                setGameOver(true);
-                gameStatus.gameOver = true;
-            }
-
             const res = await fetch("/api/savegame", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -84,7 +83,7 @@ export const GameProvider = ({ children }) => {
             }
         }
 
-        if (!gameOver) {
+        if (!gameOver && isAuthenticated) {
             deleteGame();
         }
 

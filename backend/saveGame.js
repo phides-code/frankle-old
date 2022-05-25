@@ -39,6 +39,7 @@ const saveGame = async (req, res) => {
                             onRow: req.body.onRow,
                             gameOver: req.body.gameOver,
                             gameWon: req.body.gameWon,
+                            updated: new Date(),
                         },
                     }
                 );
@@ -53,6 +54,8 @@ const saveGame = async (req, res) => {
                 .insertOne({
                     _id: uuidv4().substring(28, 37),
                     ...req.body,
+                    started: new Date(),
+                    updated: new Date(),
                 });
 
             console.log("got resultOfInsert: ");

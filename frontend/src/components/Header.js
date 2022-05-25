@@ -7,21 +7,23 @@ import LogoutButton from "./LogoutButton";
 
 const Header = () => {
     const { isAuthenticated, setShowingProfile } = useContext(UserContext);
-    const { resetGame } = useContext(GameContext);
+    const { resetGame, currentRowNumber } = useContext(GameContext);
 
     return (
         <Wrapper>
             <Frankle>Frankle</Frankle>
             <div>
+                {currentRowNumber > 0 && (
+                    <HeaderButton
+                        onClick={() => {
+                            resetGame();
+                        }}
+                    >
+                        Reset
+                    </HeaderButton>
+                )}
                 {isAuthenticated ? (
-                    <div>
-                        <HeaderButton
-                            onClick={() => {
-                                resetGame();
-                            }}
-                        >
-                            Reset
-                        </HeaderButton>
+                    <>
                         <HeaderButton
                             onClick={() => {
                                 setShowingProfile(true);
@@ -30,7 +32,7 @@ const Header = () => {
                             Profile
                         </HeaderButton>
                         <LogoutButton>Logout</LogoutButton>
-                    </div>
+                    </>
                 ) : (
                     <LoginButton>Login</LoginButton>
                 )}
@@ -56,9 +58,5 @@ const Frankle = styled.div``;
 const HeaderButton = styled.button`
     margin-right: 0.8rem;
 `;
-
-// const ProfileButton = styled.button`
-//     margin-right: 0.8rem;
-// `;
 
 export default Header;
