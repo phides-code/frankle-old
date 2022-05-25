@@ -8,8 +8,8 @@ export const GameProvider = ({ children }) => {
     const [gameOver, setGameOver] = useState(false);
     const [gameWon, setGameWon] = useState(false);
     const [currentWord, setCurrentWord] = useState(null);
-    const [currentRowNumber, setCurrentRowNumber] = useState(0); // move to boardcontext?
-    const [guesses, setGuesses] = useState([]); // move to boardcontext?
+    const [currentRowNumber, setCurrentRowNumber] = useState(0);
+    const [guesses, setGuesses] = useState([]);
     const { user, isAuthenticated, isLoading } = useContext(UserContext);
     const wordLength = 5;
     const numOfGuessRows = 6;
