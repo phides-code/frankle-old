@@ -7,23 +7,30 @@ const options = {
     useUnifiedTopology: true,
 };
 
-const uploadWords = async () => {
-    const initialWordList = [
-        "LEARN",
-        "POINT",
-        "POUND",
-        "MOUSE",
-        "ZESTY",
-        "FARCE",
-        "WAGON",
-        "MANIC",
-        "GLARE",
-        "LAUGH",
-    ];
+const checkForUniqueLetters = (word) => {
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+            if (i !== j) {
+                if (word[i] === word[j]) {
+                    return false;
+                }
+            }
+        }
+    }
 
-    const wordList = initialWordList.map((word) => {
+    return true;
+};
+
+const uploadWords = async () => {
+    const { initialWordList } = require("./words");
+
+    const cleanWordList = initialWordList.filter((word) => {
+        return word.length === 5 && checkForUniqueLetters(word);
+    });
+
+    const finalWordList = cleanWordList.map((word) => {
         return {
-            _id: uuidv4().substring(31, 37),
+            _id: uuidv4().substring(28, 37),
             word: word,
         };
     });
@@ -39,7 +46,7 @@ const uploadWords = async () => {
 
         const insertResult = await db
             .collection(collectionName)
-            .insertMany(wordList);
+            .insertMany(finalWordList);
 
         console.log("got insertResult: ");
         console.log(insertResult);

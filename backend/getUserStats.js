@@ -32,12 +32,15 @@ const getUserStats = async (req, res) => {
         const losses = gamesPlayed.length - wins.length;
 
         let scoreTotal = 0;
+        let average = 0;
 
         wins.forEach((win) => {
             scoreTotal += win.onRow;
         });
 
-        const average = scoreTotal / wins.length;
+        if (wins.length > 0) {
+            average = scoreTotal / wins.length;
+        }
 
         const userStats = {
             gamesPlayed: gamesPlayed.length,

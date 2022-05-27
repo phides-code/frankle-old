@@ -12,6 +12,7 @@ const { getSavedGames } = require("./getSavedGames");
 const { getUsers } = require("./getUsers");
 const { deleteGame } = require("./deleteGame");
 const { getUserStats } = require("./getUserStats");
+const { addWord } = require("./addWord");
 
 express()
     .use(morgan("tiny"))
@@ -30,6 +31,7 @@ express()
     .post("/api/checkvalidity", checkValidity)
     .post("/api/savegame", saveGame)
     .post("/api/loadgame", loadGame)
+    .post("/api/addword", addWord)
     .delete("/api/deletegame", deleteGame)
 
     // catch all endpoint.

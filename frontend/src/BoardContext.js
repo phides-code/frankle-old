@@ -15,23 +15,8 @@ export const BoardProvider = ({ children }) => {
         setCurrentRowNumber,
         saveGame,
         setGuesses,
+        colorize,
     } = useContext(GameContext);
-
-    const colorize = (guess) => {
-        for (let i = 0; i < wordLength; i++) {
-            const letterBox = document.getElementById(
-                `${currentRowNumber}-${i}`
-            );
-
-            if (guess[i] === currentWord[i]) {
-                letterBox.classList.add("rightPosition");
-            } else if (currentWord.includes(guess[i])) {
-                letterBox.classList.add("wrongPosition");
-            } else {
-                letterBox.classList.add("badLetter");
-            }
-        }
-    };
 
     const checkValidity = async (guess) => {
         const res = await fetch("/api/checkvalidity", {
@@ -57,7 +42,7 @@ export const BoardProvider = ({ children }) => {
                 ).innerText;
             }
             if ((await checkValidity(guess)) === true) {
-                colorize(guess);
+                colorize(guess, currentWord, currentRowNumber);
                 setGuesses((currentGuesses) => [...currentGuesses, guess]);
                 saveGame(guess);
                 setCurrentRowNumber((row) => row + 1);

@@ -52,7 +52,7 @@ const saveGame = async (req, res) => {
             const resultOfInsert = await db
                 .collection(collectionName)
                 .insertOne({
-                    _id: uuidv4().substring(28, 37),
+                    _id: uuidv4(),
                     ...req.body,
                     started: new Date(),
                     updated: new Date(),

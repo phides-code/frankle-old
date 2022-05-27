@@ -74,6 +74,7 @@ export const GameProvider = ({ children }) => {
         for (let i = 0; i < currentRowNumber; i++) {
             for (let j = 0; j < wordLength; j++) {
                 const letterBox = document.getElementById(`${i}-${j}`);
+
                 letterBox.classList.remove(
                     "rightPosition",
                     "wrongPosition",
@@ -81,6 +82,17 @@ export const GameProvider = ({ children }) => {
                 );
                 letterBox.innerText = "";
             }
+        }
+
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (let i = 0; i < alphabet.length; i++) {
+            document
+                .getElementById(alphabet[i])
+                .classList.remove(
+                    "rightPosition",
+                    "wrongPosition",
+                    "badLetter"
+                );
         }
 
         if (!gameOver && isAuthenticated) {
@@ -93,6 +105,26 @@ export const GameProvider = ({ children }) => {
         setGuesses([]);
         setCurrentRowNumber(0);
         setToggleReset(!toggleReset);
+    };
+
+    const colorize = (guess, answer, rowNumber) => {
+        for (let i = 0; i < wordLength; i++) {
+            const letterBox = document.getElementById(`${rowNumber}-${i}`);
+            const keyboardKey = document.getElementById(guess[i]);
+            letterBox.innerText = guess[i];
+
+            if (guess[i] === answer[i]) {
+                letterBox.classList.add("rightPosition");
+                keyboardKey.classList.remove("wrongPosition");
+                keyboardKey.classList.add("rightPosition");
+            } else if (answer.includes(guess[i])) {
+                letterBox.classList.add("wrongPosition");
+                keyboardKey.classList.add("wrongPosition");
+            } else {
+                letterBox.classList.add("badLetter");
+                keyboardKey.classList.add("badLetter");
+            }
+        }
     };
 
     useEffect(() => {
@@ -110,22 +142,13 @@ export const GameProvider = ({ children }) => {
             setCurrentWord(gameInProgress.word);
             setGuesses(gameInProgress.guesses);
 
-            // loop through array of guesses
+            // loop through array of guesses from the gameInProgress
             for (let i = 0; i < gameInProgress.guesses.length; i++) {
-                // loop through letters in word
-                for (let j = 0; j < wordLength; j++) {
-                    const thisLetter = gameInProgress.guesses[i][j];
-                    const letterBox = document.getElementById(`${i}-${j}`);
-                    letterBox.innerText = thisLetter;
-
-                    if (thisLetter === gameInProgress.word[j]) {
-                        letterBox.classList.add("rightPosition");
-                    } else if (gameInProgress.word.includes(thisLetter)) {
-                        letterBox.classList.add("wrongPosition");
-                    } else {
-                        letterBox.classList.add("badLetter");
-                    }
-                }
+                colorize(
+                    gameInProgress.guesses[i], // guess
+                    gameInProgress.word, // answer
+                    i // rowNumber
+                );
             }
 
             setCurrentRowNumber(gameInProgress.onRow);
@@ -169,6 +192,7 @@ export const GameProvider = ({ children }) => {
                 setGuesses,
                 setToggleReset,
                 resetGame,
+                colorize,
             }}
         >
             {children}

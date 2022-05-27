@@ -40,15 +40,25 @@ const Profile = () => {
                         {userStats && (
                             <div>
                                 <div>Games Played: {userStats.gamesPlayed}</div>
-                                <div>Wins: {userStats.wins}</div>
-                                <div>Losses: {userStats.losses}</div>
-                                <div>
-                                    Win %:{" "}
-                                    {(userStats.wins / userStats.gamesPlayed) *
-                                        100}
-                                    %
-                                </div>
-                                <div>Average: {userStats.average} guesses</div>
+                                {userStats.gamesPlayed > 0 && (
+                                    <>
+                                        <div>Wins: {userStats.wins}</div>
+                                        <div>Losses: {userStats.losses}</div>
+
+                                        <div>
+                                            Win %:{" "}
+                                            {(userStats.wins /
+                                                userStats.gamesPlayed) *
+                                                100}
+                                            %
+                                        </div>
+                                        <div>
+                                            Average:{" "}
+                                            {userStats.average.toFixed(2)}{" "}
+                                            guesses
+                                        </div>
+                                    </>
+                                )}{" "}
                             </div>
                         )}
                     </div>

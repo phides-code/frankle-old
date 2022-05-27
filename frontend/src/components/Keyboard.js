@@ -62,6 +62,7 @@ const Keyboard = () => {
                         {row.map((key, i) => {
                             return (
                                 <Key
+                                    id={key}
                                     value={key}
                                     key={i}
                                     onClick={(e) => {
@@ -99,6 +100,19 @@ const Key = styled.button`
     font-size: large;
     width: 2rem;
     height: 3rem;
+
+    &.rightPosition {
+        background-color: green;
+        color: white;
+    }
+    &.wrongPosition {
+        background-color: yellow;
+        color: black;
+    }
+    &.badLetter {
+        background-color: grey;
+        color: white;
+    }
 `;
 
 export default Keyboard;
