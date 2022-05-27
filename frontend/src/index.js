@@ -3,9 +3,9 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { UserProvider } from "./UserContext";
-import { BoardProvider } from "./BoardContext";
-import { GameProvider } from "./GameContext";
+import { UserProvider } from "./context/UserContext";
+import { BoardProvider } from "./context/BoardContext";
+import { GameProvider } from "./context/GameContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

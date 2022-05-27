@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { GameContext } from "../GameContext";
-import { UserContext } from "../UserContext";
+import { GameContext } from "../context/GameContext";
+import { UserContext } from "../context/UserContext";
 
 const Profile = () => {
     const { user, isAuthenticated, isLoading, setShowingProfile } =

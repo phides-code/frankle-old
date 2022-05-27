@@ -28,7 +28,7 @@ const addWord = async (req, res) => {
 
         const foundWord = await db
             .collection(collectionName)
-            .findOne({ word: req.body.word });
+            .findOne({ word: req.body.word.toUpperCase() });
 
         if (foundWord) {
             console.log("Word already in wordlist");

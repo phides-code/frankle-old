@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useContext } from "react";
-import { GameContext } from "../GameContext";
+import { GameContext } from "../context/GameContext";
 
 const Gameover = () => {
     const { gameWon, resetGame, currentWord } = useContext(GameContext);

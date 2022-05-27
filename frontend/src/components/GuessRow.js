@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { GameContext } from "../GameContext";
+import { GameContext } from "../context/GameContext";
 
 const GuessRow = ({ rowNum }) => {
     const { wordLength } = useContext(GameContext);

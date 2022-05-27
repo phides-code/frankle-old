@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { BoardContext } from "../BoardContext";
-import { GameContext } from "../GameContext";
+import { BoardContext } from "../context/BoardContext";
+import { GameContext } from "../context/GameContext";
 
 const keyboardLayout = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],

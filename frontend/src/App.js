@@ -4,9 +4,9 @@ import styled from "styled-components";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
 import { useContext } from "react";
-import { UserContext } from "./UserContext";
-import { BoardContext } from "./BoardContext";
-import { GameContext } from "./GameContext";
+import { UserContext } from "./context/UserContext";
+import { BoardContext } from "./context/BoardContext";
+import { GameContext } from "./context/GameContext";
 import Gameover from "./components/Gameover";
 
 const App = () => {

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { GameContext } from "../GameContext";
-import { UserContext } from "../UserContext";
+import { GameContext } from "../context/GameContext";
+import { UserContext } from "../context/UserContext";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 

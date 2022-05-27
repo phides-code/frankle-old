@@ -2,17 +2,17 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const { userLogin } = require("./userLogin");
-const { getRandomWord } = require("./getRandomWord");
-const { checkValidity } = require("./checkValidity");
-const { saveGame } = require("./saveGame");
-const { loadGame } = require("./loadGame");
-const { getWordList } = require("./getWordList");
-const { getSavedGames } = require("./getSavedGames");
-const { getUsers } = require("./getUsers");
-const { deleteGame } = require("./deleteGame");
-const { getUserStats } = require("./getUserStats");
-const { addWord } = require("./addWord");
+const { userLogin } = require("./handlers/userLogin");
+const { getRandomWord } = require("./handlers/getRandomWord");
+const { checkValidity } = require("./handlers/checkValidity");
+const { saveGame } = require("./handlers/saveGame");
+const { loadGame } = require("./handlers/loadGame");
+const { getWordList } = require("./handlers/getWordList");
+const { getSavedGames } = require("./handlers/getSavedGames");
+const { getUsers } = require("./handlers/getUsers");
+const { deleteGame } = require("./handlers/deleteGame");
+const { getUserStats } = require("./handlers/getUserStats");
+const { addWord } = require("./handlers/addWord");
 
 express()
     .use(morgan("tiny"))
