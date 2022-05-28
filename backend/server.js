@@ -1,6 +1,7 @@
 "use strict";
 const express = require("express");
 const morgan = require("morgan");
+const path = require("path");
 
 const { userLogin } = require("./handlers/userLogin");
 const { getRandomWord } = require("./handlers/getRandomWord");
@@ -18,8 +19,11 @@ express()
     .use(morgan("tiny"))
     .use(express.json())
 
-    // Any requests for static files will go into the public folder
-    .use(express.static("public"))
+    // Requests for static files go to public folder
+    // .use(express.static("public"))
+
+    // Have Node serve the files for our built React app
+    .use(express.static(path.resolve(__dirname, "..frontend/build")))
 
     // endpoints here
     .get("/api/wordlist", getWordList)
@@ -34,12 +38,18 @@ express()
     .post("/api/addword", addWord)
     .delete("/api/deletegame", deleteGame)
 
-    // catch all endpoint.
+    // catch all endpoint
+    // .get("*", (req, res) => {
+    //     res.status(404).json({
+    //         status: 404,
+    //         message: "There does not seem to be anything here.",
+    //     });
+    // })
+
     .get("*", (req, res) => {
-        res.status(404).json({
-            status: 404,
-            message: "There does not seem to be anything here.",
-        });
+        res.sendFile(
+            path.resolve(__dirname, "../frontend/build", "index.html")
+        );
     })
 
     .listen(8000, () => console.log(`Listening on port 8000`));
