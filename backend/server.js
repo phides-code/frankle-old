@@ -25,7 +25,7 @@ express()
     // .use(express.static("public"))
 
     // Have Node serve the files for our built React app
-    .use(express.static(path.resolve(__dirname, "..frontend/build")))
+    .use(express.static(path.resolve(__dirname, "../frontend/build")))
 
     // endpoints here
     .get("/api/wordlist", getWordList)
