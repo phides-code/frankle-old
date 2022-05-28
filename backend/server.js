@@ -15,6 +15,8 @@ const { deleteGame } = require("./handlers/deleteGame");
 const { getUserStats } = require("./handlers/getUserStats");
 const { addWord } = require("./handlers/addWord");
 
+const PORT = process.env.PORT || 8000;
+
 express()
     .use(morgan("tiny"))
     .use(express.json())
@@ -52,4 +54,4 @@ express()
         );
     })
 
-    .listen(8000, () => console.log(`Listening on port 8000`));
+    .listen(PORT, () => console.log(`Listening on port ${PORT}`));
