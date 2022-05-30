@@ -15,6 +15,7 @@ const { deleteGame } = require("./handlers/deleteGame");
 const { getUserStats } = require("./handlers/getUserStats");
 const { addWord } = require("./handlers/addWord");
 const { getSavedGamesByUser } = require("./handlers/getSavedGamesByUser");
+const { deleteWord } = require("./handlers/deleteWord");
 
 const PORT = process.env.PORT || 8000;
 
@@ -41,6 +42,7 @@ express()
     .post("/api/addword", addWord)
     .post("/api/savedgamesbyuser", getSavedGamesByUser)
     .delete("/api/deletegame", deleteGame)
+    .delete("/api/deleteword", deleteWord)
 
     // catch all endpoint
     // .get("*", (req, res) => {
