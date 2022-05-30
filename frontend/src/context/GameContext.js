@@ -9,13 +9,21 @@ export const GameProvider = ({ children }) => {
     const [gameWon, setGameWon] = useState(false);
     const [currentWord, setCurrentWord] = useState(null);
     const [currentRowNumber, setCurrentRowNumber] = useState(0);
+    const [currentLetterPosition, setCurrentLetterPosition] = useState(0);
     const [guesses, setGuesses] = useState([]);
     const { user, isAuthenticated, isLoading } = useContext(UserContext);
     const wordLength = 5;
     const numOfGuessRows = 6;
 
     const saveGame = async (lastGuess) => {
-        let gameStatus = { gameWon, gameOver };
+        const gameStatus = {
+            gameWon,
+            gameOver,
+            userId: isAuthenticated ? user.email : "localuser",
+            word: currentWord,
+            onRow: currentRowNumber + 1,
+            guesses: [...guesses, lastGuess],
+        };
 
         if (lastGuess === currentWord) {
             setGameWon(true);
@@ -26,30 +34,28 @@ export const GameProvider = ({ children }) => {
             setGameOver(true);
             gameStatus.gameOver = true;
         }
+
         if (isAuthenticated) {
             const res = await fetch("/api/savegame", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: user.email,
-                    word: currentWord,
-                    onRow: currentRowNumber + 1,
-                    guesses: [...guesses, lastGuess],
-                    ...gameStatus,
-                }),
+                body: JSON.stringify(gameStatus),
             });
             const saveGameResponse = await res.json();
             console.log(
                 `got saveGameResponse.message: ${saveGameResponse.message}`
             );
         }
+        // else {
+        //     console.log("storing game locally...");
+        //     localStorage.setItem("savedGame", JSON.stringify(gameStatus));
+        // }
     };
 
     const getRandomWord = async () => {
         const res = await fetch("/api/randomword");
         const randomWordResponse = await res.json();
-        console.log("got randomWord: ");
-        console.log(randomWordResponse.randomWord.word);
+
         setCurrentWord(randomWordResponse.randomWord.word);
     };
 
@@ -70,8 +76,7 @@ export const GameProvider = ({ children }) => {
     };
 
     const resetGame = () => {
-        console.log("resetting game...");
-        for (let i = 0; i < currentRowNumber; i++) {
+        for (let i = 0; i < numOfGuessRows; i++) {
             for (let j = 0; j < wordLength; j++) {
                 const letterBox = document.getElementById(`${i}-${j}`);
 
@@ -104,6 +109,7 @@ export const GameProvider = ({ children }) => {
         getRandomWord();
         setGuesses([]);
         setCurrentRowNumber(0);
+        setCurrentLetterPosition(0);
         setToggleReset(!toggleReset);
     };
 
@@ -129,13 +135,24 @@ export const GameProvider = ({ children }) => {
 
     useEffect(() => {
         const checkForGameInProgress = async () => {
-            const res = await fetch("/api/loadgame", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user.email }),
-            });
-            const loadResult = await res.json();
-            return loadResult.gameInProgress;
+            if (isAuthenticated) {
+                const res = await fetch("/api/loadgame", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: user.email }),
+                });
+                const fetchResult = await res.json();
+                return fetchResult.gameInProgress;
+            } else {
+                // console.log("checking for locally stored game...");
+                // const localSavedGame = localStorage.getItem("savedGame");
+                // if (localSavedGame) {
+                //     console.log("got localSavedGame: ");
+                //     console.log(JSON.parse(localSavedGame));
+                //     return JSON.parse(localSavedGame);
+                // }
+                return "none";
+            }
         };
 
         const loadGame = (gameInProgress) => {
@@ -155,19 +172,13 @@ export const GameProvider = ({ children }) => {
         };
 
         const startGame = async () => {
-            if (isAuthenticated) {
-                const gameInProgress = await checkForGameInProgress();
-                if (gameInProgress === "none") {
-                    console.log("no resumable game, getting random word...");
-                    getRandomWord();
-                } else {
-                    console.log("resuming game: ");
-                    console.log(gameInProgress);
-                    loadGame(gameInProgress);
-                }
-            } else if (!isLoading) {
-                console.log("no authenticated user, getting random word...");
+            const gameInProgress = await checkForGameInProgress();
+            if (gameInProgress === "none") {
+                console.log("no resumable game, getting random word...");
                 getRandomWord();
+            } else {
+                console.log("resuming game in progress... ");
+                loadGame(gameInProgress);
             }
         };
 
@@ -187,6 +198,8 @@ export const GameProvider = ({ children }) => {
                 numOfGuessRows,
                 currentRowNumber,
                 setCurrentRowNumber,
+                currentLetterPosition,
+                setCurrentLetterPosition,
                 saveGame,
                 guesses,
                 setGuesses,

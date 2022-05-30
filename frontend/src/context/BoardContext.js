@@ -4,7 +4,6 @@ import { GameContext } from "./GameContext";
 export const BoardContext = createContext();
 
 export const BoardProvider = ({ children }) => {
-    const [currentLetterPosition, setCurrentLetterPosition] = useState(0);
     const [invalidGuessWarning, setInvalidGuessWarning] = useState(false);
     const [canSubmit, setCanSubmit] = useState(false);
 
@@ -13,6 +12,7 @@ export const BoardProvider = ({ children }) => {
         wordLength,
         currentRowNumber,
         setCurrentRowNumber,
+        setCurrentLetterPosition,
         saveGame,
         setGuesses,
         colorize,
@@ -47,6 +47,7 @@ export const BoardProvider = ({ children }) => {
                 saveGame(guess);
                 setCurrentRowNumber((row) => row + 1);
                 setCurrentLetterPosition(0);
+                setCanSubmit(false);
             } else {
                 setInvalidGuessWarning(true);
                 setTimeout(() => {
@@ -59,8 +60,6 @@ export const BoardProvider = ({ children }) => {
     return (
         <BoardContext.Provider
             value={{
-                currentLetterPosition,
-                setCurrentLetterPosition,
                 invalidGuessWarning,
                 setInvalidGuessWarning,
                 processGuess,

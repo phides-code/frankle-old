@@ -10,14 +10,15 @@ const keyboardLayout = [
 ];
 
 const Keyboard = () => {
-    const { currentRowNumber, wordLength, numOfGuessRows, gameOver } =
-        useContext(GameContext);
     const {
+        currentRowNumber,
+        wordLength,
+        numOfGuessRows,
+        gameOver,
         currentLetterPosition,
         setCurrentLetterPosition,
-        processGuess,
-        setCanSubmit,
-    } = useContext(BoardContext);
+    } = useContext(GameContext);
+    const { processGuess, setCanSubmit } = useContext(BoardContext);
 
     const doBackspace = () => {
         if (currentLetterPosition > 0) {
