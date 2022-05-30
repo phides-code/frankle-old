@@ -159,7 +159,7 @@ export const GameProvider = ({ children }) => {
             setCurrentWord(gameInProgress.word);
             setGuesses(gameInProgress.guesses);
 
-            // loop through array of guesses from the gameInProgress
+            // Loop through array of guesses from the gameInProgress
             for (let i = 0; i < gameInProgress.guesses.length; i++) {
                 colorize(
                     gameInProgress.guesses[i], // guess
