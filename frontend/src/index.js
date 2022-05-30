@@ -9,21 +9,21 @@ import { GameProvider } from "./context/GameContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
-        <Auth0Provider
-            domain={process.env.REACT_APP_AUTH0_DOMAIN}
-            clientId={process.env.REACT_APP_AUTH0_CLIENTID}
-            redirectUri={window.location.origin}
-        >
-            <UserProvider>
-                <GameProvider>
-                    <BoardProvider>
-                        <App />
-                    </BoardProvider>
-                </GameProvider>
-            </UserProvider>
-        </Auth0Provider>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <Auth0Provider
+        domain={process.env.REACT_APP_AUTH0_DOMAIN}
+        clientId={process.env.REACT_APP_AUTH0_CLIENTID}
+        redirectUri={window.location.origin}
+    >
+        <UserProvider>
+            <GameProvider>
+                <BoardProvider>
+                    <App />
+                </BoardProvider>
+            </GameProvider>
+        </UserProvider>
+    </Auth0Provider>
+    // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
