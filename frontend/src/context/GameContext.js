@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { UserContext } from "./UserContext";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { UserContext } from './UserContext';
+const CryptoJS = require('crypto-js');
 
 export const GameContext = createContext();
 
@@ -11,21 +12,28 @@ export const GameProvider = ({ children }) => {
     const [currentRowNumber, setCurrentRowNumber] = useState(0);
     const [currentLetterPosition, setCurrentLetterPosition] = useState(0);
     const [guesses, setGuesses] = useState([]);
-    const { user, isAuthenticated, isLoading } = useContext(UserContext);
+    const { user, isAuthenticated } = useContext(UserContext);
     const wordLength = 5;
-    const numOfGuessRows = 6;
+    const numOfGuessRows = 5;
+
+    const decryptWord = (hashedWord) => {
+        return CryptoJS.AES.decrypt(hashedWord, 'banana').toString(
+            CryptoJS.enc.Utf8
+        );
+    };
 
     const saveGame = async (lastGuess) => {
+        const deHashedWord = decryptWord(currentWord);
         const gameStatus = {
             gameWon,
             gameOver,
-            userId: isAuthenticated ? user.email : "localuser",
+            userId: isAuthenticated ? user.email : 'localuser',
             word: currentWord,
             onRow: currentRowNumber + 1,
             guesses: [...guesses, lastGuess],
         };
 
-        if (lastGuess === currentWord) {
+        if (lastGuess === deHashedWord) {
             setGameWon(true);
             setGameOver(true);
             gameStatus.gameWon = true;
@@ -36,9 +44,9 @@ export const GameProvider = ({ children }) => {
         }
 
         if (isAuthenticated) {
-            const res = await fetch("/api/savegame", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/savegame', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(gameStatus),
             });
             const saveGameResponse = await res.json();
@@ -46,23 +54,19 @@ export const GameProvider = ({ children }) => {
                 `got saveGameResponse.message: ${saveGameResponse.message}`
             );
         }
-        // else {
-        //     console.log("storing game locally...");
-        //     localStorage.setItem("savedGame", JSON.stringify(gameStatus));
-        // }
     };
 
     const getRandomWord = async () => {
-        const res = await fetch("/api/randomword");
+        const res = await fetch('/api/randomword');
         const randomWordResponse = await res.json();
 
-        setCurrentWord(randomWordResponse.randomWord.word);
+        setCurrentWord(randomWordResponse.randomWord);
     };
 
     const deleteGame = async () => {
-        const res = await fetch("/api/deletegame", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+        const res = await fetch('/api/deletegame', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId: user.email,
                 word: currentWord,
@@ -81,22 +85,22 @@ export const GameProvider = ({ children }) => {
                 const letterBox = document.getElementById(`${i}-${j}`);
 
                 letterBox.classList.remove(
-                    "rightPosition",
-                    "wrongPosition",
-                    "badLetter"
+                    'rightPosition',
+                    'wrongPosition',
+                    'badLetter'
                 );
-                letterBox.innerText = "";
+                letterBox.innerText = '';
             }
         }
 
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         for (let i = 0; i < alphabet.length; i++) {
             document
                 .getElementById(alphabet[i])
                 .classList.remove(
-                    "rightPosition",
-                    "wrongPosition",
-                    "badLetter"
+                    'rightPosition',
+                    'wrongPosition',
+                    'badLetter'
                 );
         }
 
@@ -114,21 +118,23 @@ export const GameProvider = ({ children }) => {
     };
 
     const colorize = (guess, answer, rowNumber) => {
+        const deHashedWord = decryptWord(answer);
+
         for (let i = 0; i < wordLength; i++) {
             const letterBox = document.getElementById(`${rowNumber}-${i}`);
             const keyboardKey = document.getElementById(guess[i]);
             letterBox.innerText = guess[i];
 
-            if (guess[i] === answer[i]) {
-                letterBox.classList.add("rightPosition");
-                keyboardKey.classList.remove("wrongPosition");
-                keyboardKey.classList.add("rightPosition");
-            } else if (answer.includes(guess[i])) {
-                letterBox.classList.add("wrongPosition");
-                keyboardKey.classList.add("wrongPosition");
+            if (guess[i] === deHashedWord[i]) {
+                letterBox.classList.add('rightPosition');
+                keyboardKey.classList.remove('wrongPosition');
+                keyboardKey.classList.add('rightPosition');
+            } else if (deHashedWord.includes(guess[i])) {
+                letterBox.classList.add('wrongPosition');
+                keyboardKey.classList.add('wrongPosition');
             } else {
-                letterBox.classList.add("badLetter");
-                keyboardKey.classList.add("badLetter");
+                letterBox.classList.add('badLetter');
+                keyboardKey.classList.add('badLetter');
             }
         }
     };
@@ -136,22 +142,15 @@ export const GameProvider = ({ children }) => {
     useEffect(() => {
         const checkForGameInProgress = async () => {
             if (isAuthenticated) {
-                const res = await fetch("/api/loadgame", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                const res = await fetch('/api/loadgame', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ userId: user.email }),
                 });
                 const fetchResult = await res.json();
                 return fetchResult.gameInProgress;
             } else {
-                // console.log("checking for locally stored game...");
-                // const localSavedGame = localStorage.getItem("savedGame");
-                // if (localSavedGame) {
-                //     console.log("got localSavedGame: ");
-                //     console.log(JSON.parse(localSavedGame));
-                //     return JSON.parse(localSavedGame);
-                // }
-                return "none";
+                return 'none';
             }
         };
 
@@ -173,17 +172,17 @@ export const GameProvider = ({ children }) => {
 
         const startGame = async () => {
             const gameInProgress = await checkForGameInProgress();
-            if (gameInProgress === "none") {
-                console.log("no resumable game, getting random word...");
+            if (gameInProgress === 'none') {
+                console.log('no resumable game, getting random word...');
                 getRandomWord();
             } else {
-                console.log("resuming game in progress... ");
+                console.log('resuming game in progress... ');
                 loadGame(gameInProgress);
             }
         };
 
         startGame();
-    }, [isLoading, isAuthenticated, user?.email, toggleReset]);
+    }, [isAuthenticated, user?.email, toggleReset]);
 
     return (
         <GameContext.Provider

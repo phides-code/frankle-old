@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import styled from "styled-components";
-import { GameContext } from "../context/GameContext";
+import { useContext } from 'react';
+import styled from 'styled-components';
+import { GameContext } from '../context/GameContext';
 
 const GuessRow = ({ rowNum }) => {
     const { wordLength } = useContext(GameContext);
@@ -21,6 +21,7 @@ const Wrapper = styled.div`
 `;
 
 const Letter = styled.div`
+    transition: all 0.7s;
     font-size: x-large;
     border: 1px solid black;
     margin: 0.4rem;

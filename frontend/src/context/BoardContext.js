@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
-import { GameContext } from "./GameContext";
+import React, { createContext, useContext, useState } from 'react';
+import { GameContext } from './GameContext';
 
 export const BoardContext = createContext();
 
@@ -19,23 +19,23 @@ export const BoardProvider = ({ children }) => {
     } = useContext(GameContext);
 
     const checkValidity = async (guess) => {
-        const res = await fetch("/api/checkvalidity", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const res = await fetch('/api/checkvalidity', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ guess: guess }),
         });
         const validityResponse = await res.json();
 
-        if (validityResponse.message === "VALID") {
+        if (validityResponse.message === 'VALID') {
             return true;
-        } else if (validityResponse.message === "INVALID") {
+        } else if (validityResponse.message === 'INVALID') {
             return false;
         }
     };
 
     const processGuess = async () => {
         if (canSubmit) {
-            let guess = "";
+            let guess = '';
             for (let i = 0; i < wordLength; i++) {
                 guess += document.getElementById(
                     `${currentRowNumber}-${i}`

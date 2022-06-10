@@ -1,6 +1,7 @@
-import styled from "styled-components";
-import { useContext } from "react";
-import { GameContext } from "../context/GameContext";
+import styled from 'styled-components';
+import { useContext } from 'react';
+import { GameContext } from '../context/GameContext';
+const CryptoJS = require('crypto-js');
 
 const Gameover = () => {
     const { gameWon, resetGame, currentWord } = useContext(GameContext);
@@ -10,7 +11,10 @@ const Gameover = () => {
             {gameWon ? (
                 <WinMessage>{`Congratulations :-)`}</WinMessage>
             ) : (
-                <LossMessage>{`It was ${currentWord} :-(`}</LossMessage>
+                <LossMessage>{`It was ${CryptoJS.AES.decrypt(
+                    currentWord,
+                    'banana'
+                ).toString(CryptoJS.enc.Utf8)} :-(`}</LossMessage>
             )}
             <PlayAgainButton
                 onClick={() => {

@@ -1,12 +1,12 @@
-import { useContext } from "react";
-import styled from "styled-components";
-import { BoardContext } from "../context/BoardContext";
-import { GameContext } from "../context/GameContext";
+import { useContext } from 'react';
+import styled from 'styled-components';
+import { BoardContext } from '../context/BoardContext';
+import { GameContext } from '../context/GameContext';
 
 const keyboardLayout = [
-    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-    ["A", "S", "D", "F", "G", "H", "J", "K", "L", "<"],
-    ["?", "Z", "X", "C", "V", "B", "N", "M", "✔️"],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '<'],
+    ['?', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '✔️'],
 ];
 
 const Keyboard = () => {
@@ -25,7 +25,7 @@ const Keyboard = () => {
             setCanSubmit(false);
             document.getElementById(
                 `${currentRowNumber}-${currentLetterPosition - 1}`
-            ).innerText = "";
+            ).innerText = '';
             setCurrentLetterPosition((pos) => pos - 1);
         }
     };
@@ -46,9 +46,9 @@ const Keyboard = () => {
     };
 
     const handleKey = (e) => {
-        if (e.target.value === "✔️") {
+        if (e.target.value === '✔️') {
             processGuess();
-        } else if (e.target.value === "<") {
+        } else if (e.target.value === '<') {
             doBackspace();
         } else {
             typeLetter(e.target.value);
@@ -97,10 +97,11 @@ const Row = styled.div`
 `;
 
 const Key = styled.button`
+    transition: all 0.7s;
     margin-right: 0.2rem;
     font-size: large;
-    width: 2rem;
-    height: 3rem;
+    width: 2.2rem;
+    height: 3.4rem;
 
     &.rightPosition {
         background-color: green;
