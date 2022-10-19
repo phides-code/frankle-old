@@ -5,6 +5,7 @@ export const BoardContext = createContext();
 
 export const BoardProvider = ({ children }) => {
     const [invalidGuessWarning, setInvalidGuessWarning] = useState(false);
+
     const [canSubmit, setCanSubmit] = useState(false);
 
     const {
@@ -13,9 +14,10 @@ export const BoardProvider = ({ children }) => {
         currentRowNumber,
         setCurrentRowNumber,
         setCurrentLetterPosition,
-        saveGame,
+        checkForGameOver,
         setGuesses,
         colorize,
+        setStartTime,
     } = useContext(GameContext);
 
     const checkValidity = async (guess) => {
@@ -44,7 +46,10 @@ export const BoardProvider = ({ children }) => {
             if ((await checkValidity(guess)) === true) {
                 colorize(guess, currentWord, currentRowNumber);
                 setGuesses((currentGuesses) => [...currentGuesses, guess]);
-                saveGame(guess);
+                checkForGameOver(guess);
+                if (currentRowNumber === 0) {
+                    setStartTime(new Date());
+                }
                 setCurrentRowNumber((row) => row + 1);
                 setCurrentLetterPosition(0);
                 setCanSubmit(false);

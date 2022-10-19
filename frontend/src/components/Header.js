@@ -1,13 +1,10 @@
-import { useContext } from "react";
-import styled from "styled-components";
-import { GameContext } from "../context/GameContext";
-import { UserContext } from "../context/UserContext";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
+import { useContext } from 'react';
+import styled from 'styled-components';
+import { GameContext } from '../context/GameContext';
 
 const Header = () => {
-    const { isAuthenticated, setShowingProfile } = useContext(UserContext);
-    const { resetGame, currentRowNumber } = useContext(GameContext);
+    const { resetGame, currentRowNumber, setShowBestTimes } =
+        useContext(GameContext);
 
     return (
         <Wrapper>
@@ -22,20 +19,13 @@ const Header = () => {
                         Reset
                     </HeaderButton>
                 )}
-                {isAuthenticated ? (
-                    <>
-                        <HeaderButton
-                            onClick={() => {
-                                setShowingProfile(true);
-                            }}
-                        >
-                            Profile
-                        </HeaderButton>
-                        <LogoutButton>Logout</LogoutButton>
-                    </>
-                ) : (
-                    <LoginButton>Login</LoginButton>
-                )}
+                <HeaderButton
+                    onClick={() => {
+                        setShowBestTimes(true);
+                    }}
+                >
+                    Best Times
+                </HeaderButton>
             </div>
         </Wrapper>
     );

@@ -1,24 +1,26 @@
-import Keyboard from "./components/Keyboard";
-import MainBoard from "./components/MainBoard";
-import styled from "styled-components";
-import Header from "./components/Header";
-import Profile from "./components/Profile";
-import { useContext } from "react";
-import { UserContext } from "./context/UserContext";
-import { BoardContext } from "./context/BoardContext";
-import { GameContext } from "./context/GameContext";
-import Gameover from "./components/Gameover";
+import Keyboard from './components/Keyboard';
+import MainBoard from './components/MainBoard';
+import styled from 'styled-components';
+import Header from './components/Header';
+import { useContext } from 'react';
+import { BoardContext } from './context/BoardContext';
+import { GameContext } from './context/GameContext';
+import Gameover from './components/Gameover';
+import Chronometer from './components/Chronometer';
+import BestTimes from './components/BestTimes';
 
 const App = () => {
-    const { showingProfile } = useContext(UserContext);
     const { invalidGuessWarning } = useContext(BoardContext);
-    const { gameOver } = useContext(GameContext);
+    const { gameOver, showBestTimes } = useContext(GameContext);
 
     return (
         <Wrapper>
             <Header />
-            {showingProfile && <Profile />}
+            {showBestTimes && <BestTimes />}
             <MainBoard />
+
+            <Keyboard />
+            <Chronometer />
             <GameMessage>
                 {gameOver ? (
                     <Gameover />
@@ -27,7 +29,6 @@ const App = () => {
                 )}
                 {invalidGuessWarning && <>{`Invalid word :-/`}</>}
             </GameMessage>
-            <Keyboard />
         </Wrapper>
     );
 };

@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { UserContext } from './UserContext';
+import React, { createContext, useEffect, useState } from 'react';
 const CryptoJS = require('crypto-js');
 
 export const GameContext = createContext();
@@ -12,9 +11,20 @@ export const GameProvider = ({ children }) => {
     const [currentRowNumber, setCurrentRowNumber] = useState(0);
     const [currentLetterPosition, setCurrentLetterPosition] = useState(0);
     const [guesses, setGuesses] = useState([]);
-    const { user, isAuthenticated } = useContext(UserContext);
+    const [startTime, setStartTime] = useState(null);
+    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [finalTime, setFinalTime] = useState(null);
+    const [showBestTimes, setShowBestTimes] = useState(false);
+    const [bestTimes, setBestTimes] = useState(null);
+    const [showPromptForInitials, setShowPromptForInitials] = useState(false);
     const wordLength = 5;
     const numOfGuessRows = 5;
+
+    const getBestTimes = async () => {
+        const res = await fetch('/api/getbesttimes');
+        const data = await res.json();
+        return data.bestTimes;
+    };
 
     const decryptWord = (hashedWord) => {
         return CryptoJS.AES.decrypt(hashedWord, 'banana').toString(
@@ -22,37 +32,47 @@ export const GameProvider = ({ children }) => {
         );
     };
 
-    const saveGame = async (lastGuess) => {
+    const checkForBestTime = async (thisTime) => {
+        const thisTimeFormatted =
+            thisTime.slice(0, 2) +
+            thisTime.slice(3, 5) +
+            thisTime.slice(6, 8) +
+            thisTime.slice(9, 11);
+
+        const bestTimes = await getBestTimes();
+
+        if (bestTimes.length < 10 || thisTimeFormatted < bestTimes[9].time) {
+            // add this to best times
+            setShowPromptForInitials(true);
+        }
+    };
+
+    const checkForGameOver = async (lastGuess) => {
         const deHashedWord = decryptWord(currentWord);
         const gameStatus = {
             gameWon,
             gameOver,
-            userId: isAuthenticated ? user.email : 'localuser',
             word: currentWord,
+            startTime,
             onRow: currentRowNumber + 1,
             guesses: [...guesses, lastGuess],
+            timeElapsed,
         };
 
         if (lastGuess === deHashedWord) {
+            if (currentRowNumber === 0) {
+                gameStatus.timeElapsed = '00:00:00.00';
+            }
+
             setGameWon(true);
+            setFinalTime(gameStatus.timeElapsed);
             setGameOver(true);
+            checkForBestTime(gameStatus.timeElapsed);
             gameStatus.gameWon = true;
             gameStatus.gameOver = true;
         } else if (currentRowNumber === numOfGuessRows - 1) {
             setGameOver(true);
             gameStatus.gameOver = true;
-        }
-
-        if (isAuthenticated) {
-            const res = await fetch('/api/savegame', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(gameStatus),
-            });
-            const saveGameResponse = await res.json();
-            console.log(
-                `got saveGameResponse.message: ${saveGameResponse.message}`
-            );
         }
     };
 
@@ -61,22 +81,6 @@ export const GameProvider = ({ children }) => {
         const randomWordResponse = await res.json();
 
         setCurrentWord(randomWordResponse.randomWord);
-    };
-
-    const deleteGame = async () => {
-        const res = await fetch('/api/deletegame', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: user.email,
-                word: currentWord,
-            }),
-        });
-
-        const deleteGameResponse = await res.json();
-        console.log(
-            `got deleteGameResponse.message: ${deleteGameResponse.message}`
-        );
     };
 
     const resetGame = () => {
@@ -104,16 +108,15 @@ export const GameProvider = ({ children }) => {
                 );
         }
 
-        if (!gameOver && isAuthenticated) {
-            deleteGame();
-        }
-
         setGameOver(false);
         setGameWon(false);
         getRandomWord();
         setGuesses([]);
         setCurrentRowNumber(0);
         setCurrentLetterPosition(0);
+        setStartTime(null);
+        setFinalTime(null);
+        setTimeElapsed(0);
         setToggleReset(!toggleReset);
     };
 
@@ -140,49 +143,13 @@ export const GameProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const checkForGameInProgress = async () => {
-            if (isAuthenticated) {
-                const res = await fetch('/api/loadgame', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: user.email }),
-                });
-                const fetchResult = await res.json();
-                return fetchResult.gameInProgress;
-            } else {
-                return 'none';
-            }
-        };
-
-        const loadGame = (gameInProgress) => {
-            setCurrentWord(gameInProgress.word);
-            setGuesses(gameInProgress.guesses);
-
-            // Loop through array of guesses from the gameInProgress
-            for (let i = 0; i < gameInProgress.guesses.length; i++) {
-                colorize(
-                    gameInProgress.guesses[i], // guess
-                    gameInProgress.word, // answer
-                    i // rowNumber
-                );
-            }
-
-            setCurrentRowNumber(gameInProgress.onRow);
-        };
-
         const startGame = async () => {
-            const gameInProgress = await checkForGameInProgress();
-            if (gameInProgress === 'none') {
-                console.log('no resumable game, getting random word...');
-                getRandomWord();
-            } else {
-                console.log('resuming game in progress... ');
-                loadGame(gameInProgress);
-            }
+            console.log('getting random word...');
+            getRandomWord();
         };
 
         startGame();
-    }, [isAuthenticated, user?.email, toggleReset]);
+    }, [toggleReset]);
 
     return (
         <GameContext.Provider
@@ -199,12 +166,24 @@ export const GameProvider = ({ children }) => {
                 setCurrentRowNumber,
                 currentLetterPosition,
                 setCurrentLetterPosition,
-                saveGame,
+                checkForGameOver,
                 guesses,
                 setGuesses,
                 setToggleReset,
                 resetGame,
                 colorize,
+                startTime,
+                setStartTime,
+                timeElapsed,
+                setTimeElapsed,
+                finalTime,
+                showBestTimes,
+                setShowBestTimes,
+                bestTimes,
+                setBestTimes,
+                getBestTimes,
+                showPromptForInitials,
+                setShowPromptForInitials,
             }}
         >
             {children}

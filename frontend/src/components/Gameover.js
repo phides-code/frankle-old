@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 import { useContext } from 'react';
 import { GameContext } from '../context/GameContext';
+import NewBestTime from './NewBestTime';
 const CryptoJS = require('crypto-js');
 
 const Gameover = () => {
-    const { gameWon, resetGame, currentWord } = useContext(GameContext);
+    const { gameWon, resetGame, currentWord, showPromptForInitials } =
+        useContext(GameContext);
 
     return (
         <Wrapper>
             {gameWon ? (
-                <WinMessage>{`Congratulations :-)`}</WinMessage>
+                <GameWonMessages>
+                    <WinMessage>{`Congratulations :-)`}</WinMessage>
+                    {showPromptForInitials && <NewBestTime />}
+                </GameWonMessages>
             ) : (
                 <LossMessage>{`It was ${CryptoJS.AES.decrypt(
                     currentWord,
@@ -47,6 +52,11 @@ const LossMessage = styled.div`
 
 const PlayAgainButton = styled.button`
     padding: 0.2rem 0.4rem;
+`;
+
+const GameWonMessages = styled.div`
+    /* display: flex;
+    flex-direction: column; */
 `;
 
 export default Gameover;
